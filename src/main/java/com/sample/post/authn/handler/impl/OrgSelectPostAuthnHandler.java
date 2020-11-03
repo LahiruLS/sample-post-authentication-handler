@@ -121,6 +121,9 @@ public class OrgSelectPostAuthnHandler extends DefaultPostAuthenticationHandler 
             sequenceConfig.getAuthenticatedUser().getUserAttributes().remove(key);
             //Add only the selected role
             sequenceConfig.getAuthenticatedUser().getUserAttributes().put(key, input);
+            //To set the authenticated subject identifier
+            //AuthenticatedUser authenticatedUser = sequenceConfig.getAuthenticatedUser();
+            //authenticatedUser.setAuthenticatedSubjectIdentifier("some value goes here");
 	    }
     }
 
