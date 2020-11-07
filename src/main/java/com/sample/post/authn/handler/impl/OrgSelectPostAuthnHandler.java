@@ -53,9 +53,6 @@ public class OrgSelectPostAuthnHandler extends DefaultPostAuthenticationHandler 
         //First we need to handler the default post authentication flow
         super.handle(request, response, context);
 
-        //First need to set the post authentication finished to false.
-        context.setProperty(FrameworkConstants.POST_AUTHENTICATION_EXTENSION_COMPLETED, false);
-
         //Now the custom flow begins.
         AuthenticatedUser authenticatedUser = getAuthenticatedUser(context);
 		String tenantDomain = authenticatedUser.getTenantDomain();
@@ -68,7 +65,7 @@ public class OrgSelectPostAuthnHandler extends DefaultPostAuthenticationHandler 
 		} catch (IdentityApplicationManagementException e) {
 			String error = "Organization selection Post authentication handler execution failed: Can not find the " +
 					"service provider.";
-			log.error(error);
+			log.error(error, e);
 			return;
 		}
         String description = serviceProvider.getDescription();
@@ -90,8 +87,11 @@ public class OrgSelectPostAuthnHandler extends DefaultPostAuthenticationHandler 
                 && !postAuthRequestTriggered) {
 			if (isOrgPagePrompted(context)) {
 				handlePostOrganizationSelection(request, response, context);
+                //Finally we need to set the post authentication status to finished.
                 context.setProperty(FrameworkConstants.POST_AUTHENTICATION_EXTENSION_COMPLETED, true);
             } else {
+                //First need to set the post authentication finished to false.
+                context.setProperty(FrameworkConstants.POST_AUTHENTICATION_EXTENSION_COMPLETED, false);
 				handlePreOrganizationSelection(request, response, context);
 			}
 		}
